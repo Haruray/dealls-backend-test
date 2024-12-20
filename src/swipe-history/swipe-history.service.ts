@@ -20,7 +20,7 @@ export class SwipeHistoryService {
     const swipeHistory = this.prisma.swipeHistory.create({
       data: createSwipeHistoryDto,
     });
-    
+
     // if the swiped user createSwipeHistoryDto.liked is true, then add a match
     if (createSwipeHistoryDto.liked) {
       const match = await this.prisma.swipeHistory.findFirst({

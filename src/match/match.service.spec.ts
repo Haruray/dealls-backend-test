@@ -21,10 +21,10 @@ describe('MatchService', () => {
     usersService = module.get<UsersService>(UsersService);
   });
 
-//   afterEach(async () => {
-//     await prisma.match.deleteMany({});
-//     await prisma.user.deleteMany({});
-//   });
+  //   afterEach(async () => {
+  //     await prisma.match.deleteMany({});
+  //     await prisma.user.deleteMany({});
+  //   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -172,7 +172,9 @@ describe('MatchService', () => {
 
     jest.spyOn(prisma.match, 'update').mockResolvedValue(updateMatchDto as any);
 
-    expect(await service.update(match.id, updateMatchDto)).toEqual(updateMatchDto);
+    expect(await service.update(match.id, updateMatchDto)).toEqual(
+      updateMatchDto,
+    );
   });
 
   it('should remove a match', async () => {

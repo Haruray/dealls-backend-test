@@ -22,10 +22,10 @@ describe('SwipeHistoryService', () => {
     usersService = module.get<UsersService>(UsersService);
   });
 
-//   afterEach(async () => {
-//     await prisma.swipeHistory.deleteMany({});
-//     await prisma.user.deleteMany({});
-//   });
+  //   afterEach(async () => {
+  //     await prisma.swipeHistory.deleteMany({});
+  //     await prisma.user.deleteMany({});
+  //   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -87,50 +87,52 @@ describe('SwipeHistoryService', () => {
     expect(await service.findAll()).toEqual(swipeHistories);
   });
 
-it('should create a user, create a swipe history, then find one swipe history by id', async () => {
+  it('should create a user, create a swipe history, then find one swipe history by id', async () => {
     const randomInt = Math.floor(Math.random() * 10000);
     const createUserDto: CreateUserDto = {
-        name: 'User1',
-        email: `user1_${randomInt}@example.com`,
-        password: 'password',
-        nickname: 'user1',
-        gender: 'MALE',
-        birthdate: new Date(),
-        photo: 'photo1.jpg',
-        interests: 'coding',
-        membership: Membership.FREE,
+      name: 'User1',
+      email: `user1_${randomInt}@example.com`,
+      password: 'password',
+      nickname: 'user1',
+      gender: 'MALE',
+      birthdate: new Date(),
+      photo: 'photo1.jpg',
+      interests: 'coding',
+      membership: Membership.FREE,
     };
 
     const user1 = await usersService.create(createUserDto);
 
     const createUserDto2: CreateUserDto = {
-        name: 'User2',
-        email: `user2_${randomInt}@example.com`,
-        password: 'password',
-        nickname: 'user2',
-        gender: 'FEMALE',
-        birthdate: new Date(),
-        photo: 'photo2.jpg',
-        interests: 'reading',
-        membership: Membership.FREE,
+      name: 'User2',
+      email: `user2_${randomInt}@example.com`,
+      password: 'password',
+      nickname: 'user2',
+      gender: 'FEMALE',
+      birthdate: new Date(),
+      photo: 'photo2.jpg',
+      interests: 'reading',
+      membership: Membership.FREE,
     };
 
     const user2 = await usersService.create(createUserDto2);
 
     const createSwipeHistoryDto: CreateSwipeHistoryDto = {
-        userId: user1.id,
-        swipedUserId: user2.id,
-        liked: true,
+      userId: user1.id,
+      swipedUserId: user2.id,
+      liked: true,
     };
 
     const createdSwipeHistory = await service.create(createSwipeHistoryDto);
 
     jest
-        .spyOn(prisma.swipeHistory, 'findUnique')
-        .mockResolvedValue(createdSwipeHistory as any);
+      .spyOn(prisma.swipeHistory, 'findUnique')
+      .mockResolvedValue(createdSwipeHistory as any);
 
-    expect(await service.findOne(createdSwipeHistory.id)).toEqual(createdSwipeHistory);
-});
+    expect(await service.findOne(createdSwipeHistory.id)).toEqual(
+      createdSwipeHistory,
+    );
+  });
 
   it('should update a swipe history', async () => {
     const randomInt = Math.floor(Math.random() * 10000);
@@ -182,9 +184,9 @@ it('should create a user, create a swipe history, then find one swipe history by
       .spyOn(prisma.swipeHistory, 'update')
       .mockResolvedValue(updateSwipeHistoryDto as any);
 
-    expect(await service.update(createdSwipeHistory.id, updateSwipeHistoryDto)).toEqual(
-      updateSwipeHistoryDto,
-    );
+    expect(
+      await service.update(createdSwipeHistory.id, updateSwipeHistoryDto),
+    ).toEqual(updateSwipeHistoryDto);
   });
 
   it('should remove a swipe history', async () => {
