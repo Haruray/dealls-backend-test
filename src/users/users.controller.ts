@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,7 +26,9 @@ export class UsersController {
       const result = await this.usersService.create(createUserDto);
       return res.json({ message: 'User created successfully', data: result });
     } catch (error) {
-      return res.status(500).json({ message: 'Error creating user', error: error.message });
+      return res
+        .status(500)
+        .json({ message: 'Error creating user', error: error.message });
     }
   }
 
@@ -25,9 +37,14 @@ export class UsersController {
   async findAll(@Res() res: Response) {
     try {
       const result = await this.usersService.findAll();
-      return res.json({ message: 'Users retrieved successfully', data: result });
+      return res.json({
+        message: 'Users retrieved successfully',
+        data: result,
+      });
     } catch (error) {
-      return res.status(500).json({ message: 'Error retrieving users', error: error.message });
+      return res
+        .status(500)
+        .json({ message: 'Error retrieving users', error: error.message });
     }
   }
 
@@ -38,18 +55,26 @@ export class UsersController {
       const result = await this.usersService.findOne(id);
       return res.json({ message: 'User retrieved successfully', data: result });
     } catch (error) {
-      return res.status(500).json({ message: 'Error retrieving user', error: error.message });
+      return res
+        .status(500)
+        .json({ message: 'Error retrieving user', error: error.message });
     }
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Res() res: Response,
+  ) {
     try {
       const result = await this.usersService.update(id, updateUserDto);
       return res.json({ message: 'User updated successfully', data: result });
     } catch (error) {
-      return res.status(500).json({ message: 'Error updating user', error: error.message });
+      return res
+        .status(500)
+        .json({ message: 'Error updating user', error: error.message });
     }
   }
 
@@ -60,7 +85,9 @@ export class UsersController {
       const result = await this.usersService.remove(id);
       return res.json({ message: 'User deleted successfully', data: result });
     } catch (error) {
-      return res.status(500).json({ message: 'Error deleting user', error: error.message });
+      return res
+        .status(500)
+        .json({ message: 'Error deleting user', error: error.message });
     }
   }
 }

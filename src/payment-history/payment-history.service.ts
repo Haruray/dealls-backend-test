@@ -16,19 +16,18 @@ export class PaymentHistoryService {
         data: createPaymentHistoryDto,
       });
 
-      if (createPaymentHistoryDto.paymentStatus == PaymentStatus.COMPLETED){
+      if (createPaymentHistoryDto.paymentStatus == PaymentStatus.COMPLETED) {
         // update user membership
         await this.prisma.user.update({
           where: { id: createPaymentHistoryDto.userId },
           data: {
             membership: Membership.VERIFIED,
-            membershipValidUntil: new Date( 
+            membershipValidUntil: new Date(
               new Date().setMonth(new Date().getMonth() + 1),
             ),
           },
         });
       }
-      
 
       return payment;
     } catch (error) {
@@ -56,24 +55,23 @@ export class PaymentHistoryService {
 
   async update(id: string, updatePaymentHistoryDto: UpdatePaymentHistoryDto) {
     try {
-      const payment =  await this.prisma.paymentHistory.update({
+      const payment = await this.prisma.paymentHistory.update({
         where: { id },
         data: updatePaymentHistoryDto,
       });
 
-      if (updatePaymentHistoryDto.paymentStatus == PaymentStatus.COMPLETED){
+      if (updatePaymentHistoryDto.paymentStatus == PaymentStatus.COMPLETED) {
         // update user membership
         await this.prisma.user.update({
           where: { id: payment.userId },
           data: {
             membership: Membership.VERIFIED,
-            membershipValidUntil: new Date( 
+            membershipValidUntil: new Date(
               new Date().setMonth(new Date().getMonth() + 1),
             ),
           },
         });
       }
-      
     } catch (error) {
       throw new Error(`Error updating payment history: ${error.message}`);
     }

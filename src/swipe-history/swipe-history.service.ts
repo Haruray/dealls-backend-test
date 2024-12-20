@@ -14,7 +14,7 @@ export class SwipeHistoryService {
     }
 
     if (createSwipeHistoryDto.userId === createSwipeHistoryDto.swipedUserId) {
-        throw new Error('You cannot swipe yourself');
+      throw new Error('You cannot swipe yourself');
     }
 
     return this.prisma.swipeHistory.create({
@@ -33,13 +33,12 @@ export class SwipeHistoryService {
   }
 
   async update(id: string, updateSwipeHistoryDto: UpdateSwipeHistoryDto) {
-
     if (await this.hasExceededDailyLimit(updateSwipeHistoryDto.userId)) {
       throw new Error('You have exceeded the daily swipe limit');
     }
 
     if (updateSwipeHistoryDto.userId === updateSwipeHistoryDto.swipedUserId) {
-        throw new Error('You cannot swipe yourself');
+      throw new Error('You cannot swipe yourself');
     }
 
     return this.prisma.swipeHistory.update({
@@ -59,15 +58,14 @@ export class SwipeHistoryService {
     today.setHours(0, 0, 0, 0);
 
     const user = await this.prisma.user.findUnique({
-        where: {
-            id: userId,
-        },
+      where: {
+        id: userId,
+      },
     });
 
     if (user.membership === Membership.VERIFIED) {
-        return false;
+      return false;
     }
-
 
     const swipeCount = await this.prisma.swipeHistory.count({
       where: {
