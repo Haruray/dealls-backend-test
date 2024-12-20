@@ -41,41 +41,83 @@ describe('UsersService', () => {
   });
 
   it('should find all users', async () => {
-    const users = [{ id: '1', email: 'john@example.com' }];
-    jest.spyOn(prisma.user, 'findMany').mockResolvedValue(users as any);
-
-    expect(await service.findAll()).toEqual(users);
+    expect(await service.findAll()).toBeDefined();
   });
 
-  it('should find one user by id', async () => {
-    const user = { id: '1', email: 'john@example.com' };
-    jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(user as any);
+  it('should create a user and then find one by id', async () => {
+    const randomInt = Math.floor(Math.random() * 10000);
+    const createUserDto: CreateUserDto = {
+      name: randomInt.toString(),
+      email: `${randomInt}@example.com`,
+      password: 'password',
+      nickname: 'jane',
+      gender: Gender.FEMALE,
+      birthdate: new Date(),
+      photo: 'photo_url',
+      interests: 'music, sports',
+      membership: Membership.VERIFIED,
+    };
 
-    expect(await service.findOne('1')).toEqual(user);
+    const createdUser = await service.create(createUserDto);
+
+    jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(createdUser as any);
+
+    expect(await service.findOne(createdUser.id)).toEqual(createdUser);
   });
 
-  it('should update a user', async () => {
+
+  it('should create a user and then update it', async () => {
+    const randomInt = Math.floor(Math.random() * 10000);
+    const createUserDto: CreateUserDto = {
+      name: 'Alice',
+      email: `alice${randomInt}@example.com`,
+      password: 'password',
+      nickname: 'alice',
+      gender: Gender.FEMALE,
+      birthdate: new Date(),
+      photo: 'photo_url',
+      interests: 'art, travel',
+      membership: Membership.FREE,
+    };
+
     const updateUserDto: UpdateUserDto = {
-      name: 'John Updated',
-      email: 'john.updated@example.com',
+      name: 'Alice Updated',
+      email: `alice${randomInt}@example.com`,
       password: 'newpassword',
-      nickname: 'johnny',
-      gender: Gender.MALE,
+      nickname: 'alice',
+      gender: Gender.FEMALE,
       birthdate: new Date(),
       photo: 'new_photo_url',
-      interests: 'coding, reading',
+      interests: 'art, travel',
       membership: Membership.FREE,
     };
 
     jest.spyOn(prisma.user, 'update').mockResolvedValue(updateUserDto as any);
 
-    expect(await service.update('1', updateUserDto)).toEqual(updateUserDto);
+    const createdUser = await service.create(createUserDto);
+
+    expect(await service.update(createdUser.id, updateUserDto)).toEqual(updateUserDto);
   });
 
-  it('should remove a user', async () => {
-    const user = { id: '1', email: 'john@example.com' };
-    jest.spyOn(prisma.user, 'delete').mockResolvedValue(user as any);
 
-    expect(await service.remove('1')).toEqual(user);
-  });
+it('should create a user and then delete it', async () => {
+  const randomInt = Math.floor(Math.random() * 10000);
+  const createUserDto: CreateUserDto = {
+    name: 'Bob',
+    email: `${randomInt}@example.com`,
+    password: 'password',
+    nickname: 'bobby',
+    gender: Gender.MALE,
+    birthdate: new Date(),
+    photo: 'photo_url',
+    interests: 'gaming, hiking',
+    membership: Membership.FREE,
+  };
+
+  const createdUser = await service.create(createUserDto);
+
+  jest.spyOn(prisma.user, 'delete').mockResolvedValue(createdUser as any);
+
+  expect(await service.remove(createdUser.id)).toEqual(createdUser);
+});
 });

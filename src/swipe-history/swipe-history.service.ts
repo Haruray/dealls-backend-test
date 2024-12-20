@@ -17,9 +17,31 @@ export class SwipeHistoryService {
       throw new Error('You cannot swipe yourself');
     }
 
-    return this.prisma.swipeHistory.create({
+    const swipeHistory = this.prisma.swipeHistory.create({
       data: createSwipeHistoryDto,
     });
+    
+    // if the swiped user createSwipeHistoryDto.liked is true, then add a match
+    if (createSwipeHistoryDto.liked) {
+      const match = await this.prisma.swipeHistory.findFirst({
+        where: {
+          userId: createSwipeHistoryDto.swipedUserId,
+          swipedUserId: createSwipeHistoryDto.userId,
+          liked: true,
+        },
+      });
+
+      if (match) {
+        await this.prisma.match.create({
+          data: {
+            userId: createSwipeHistoryDto.userId,
+            matchedUserId: createSwipeHistoryDto.swipedUserId,
+          },
+        });
+      }
+    }
+
+    return swipeHistory;
   }
 
   async findOne(id: string) {
@@ -41,10 +63,32 @@ export class SwipeHistoryService {
       throw new Error('You cannot swipe yourself');
     }
 
-    return this.prisma.swipeHistory.update({
+    const swipeHistory = this.prisma.swipeHistory.update({
       where: { id },
       data: updateSwipeHistoryDto,
     });
+
+    // if the swiped user updateSwipeHistoryDto.liked is true, then add a match
+    if (updateSwipeHistoryDto.liked) {
+      const match = await this.prisma.swipeHistory.findFirst({
+        where: {
+          userId: updateSwipeHistoryDto.swipedUserId,
+          swipedUserId: updateSwipeHistoryDto.userId,
+          liked: true,
+        },
+      });
+
+      if (match) {
+        await this.prisma.match.create({
+          data: {
+            userId: updateSwipeHistoryDto.userId,
+            matchedUserId: updateSwipeHistoryDto.swipedUserId,
+          },
+        });
+      }
+    }
+
+    return swipeHistory;
   }
 
   async remove(id: string) {

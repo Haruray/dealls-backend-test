@@ -72,6 +72,8 @@ export class PaymentHistoryService {
           },
         });
       }
+
+      return payment;
     } catch (error) {
       throw new Error(`Error updating payment history: ${error.message}`);
     }
